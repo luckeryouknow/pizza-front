@@ -6,6 +6,10 @@ export default function Menu () {
   const [menu, setMenu] = useState([])
   const [currentQuantity, setCurrentQuantity] = useState("0")
   const [displayOrder, setDisplayOrder] = useState(false)
+  const [userData, setUserData] = useState({
+    name: '',
+    phoneNumber: '',
+  })
   const options = [
     {
       value: '1',
@@ -84,7 +88,9 @@ export default function Menu () {
       },
       body: JSON.stringify({
         defaultUserId: JSON.parse(sessionStorage.getItem('user')).id,
-        items: JSON.parse(localStorage.getItem("items"))
+        items: JSON.parse(localStorage.getItem("items")),
+        name: userData.name,
+        phoneNumber: userData.phoneNumber,
       })
     })
 
@@ -123,8 +129,22 @@ export default function Menu () {
           </button>
           {localStorage.getItem("items") && (
             <div style={{width: "100%"}}>
+              <div style={{ display: "flex", flexDirection: "column", width: '200px', marginBottom: '10px' }}>
+                <input
+                  onChange={(event) => setUserData({ ...userData, name: event.currentTarget.value })}
+                  value={userData.name}
+                  placeholder={'Name'}
+                  type="text"
+                />
+                <input
+                  onChange={(event) => setUserData({ ...userData, phoneNumber: event.currentTarget.value })}
+                  value={userData.phoneNumber}
+                  placeholder={'Phone number'}
+                  type="text"
+                />
+              </div>
               <div style={{display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center"}}>
-                {JSON.parse(localStorage.getItem("items")).map(item => (
+              {JSON.parse(localStorage.getItem("items")).map(item => (
                   <div key={item.menuItemId}>
                     <img style={{width: '300px'}} src={item.image} alt={item.id}/>
                     <h3>{item.name}</h3>

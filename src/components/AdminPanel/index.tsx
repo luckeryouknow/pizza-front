@@ -75,6 +75,33 @@ export default function AdminPanel () {
     })
   }
 
+  const callHandler = async (event: MouseEvent<HTMLButtonElement>) => {
+    alert("Calling...")
+
+    const id = event.currentTarget.id
+    const orderId = id.replace('call-', '');
+
+    await fetch('http://localhost:8001/order/call-order', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ orderId, })
+    })
+
+    getOrders()
+
+    setTimeout( () => {
+      fetch('http://localhost:8001/order/after-call', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ orderId })
+      }).then(() => getOrders())
+    }, 3000)
+  }
+
   useEffect(() => {
     getOrders()
   }, []);
@@ -131,10 +158,12 @@ export default function AdminPanel () {
         </form>
       ) : (
         <div>
-          {orders.map(order => (
+          {orders && orders.length > 0 && orders.map(order => (
             <div key={order.id}>
               <h2>{order.id}</h2>
               <p>{order.status}</p>
+              <p>User name: {order.name}</p>
+              <p>User number: {order.phoneNumber}</p>
               {order.orderItems.length > 0 && (
                 <div>
                   <h3>List of dishes</h3>
@@ -149,11 +178,15 @@ export default function AdminPanel () {
                 </div>
               )}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                <Dropdown
-                  onChange={(option) => setPickedOption(option)}
-                  options={options}
-                />
-                <button id={order.id} onClick={assignHandler}>assign</button>
+                {order.status === "READY_TO_DELIVER" && (
+                  <Dropdown
+                    onChange={(option) => setPickedOption(option)}
+                    options={options}
+                  />
+                )}
+                {order.status === "READY_TO_DELIVER" && (<button id={order.id} onClick={assignHandler}>assign</button>)}
+                {order.status !== "READY_TO_DELIVER" && (
+                  <button id={`call-${order.id}`} onClick={callHandler}>call</button>)}
               </div>
             </div>
           ))}
