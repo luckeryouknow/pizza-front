@@ -105,19 +105,28 @@ export default function Menu () {
       </button>
 
       {displayOrder && (
-        <div style={{ position: "fixed", zIndex: "10", top: "0", left: "0", height: "100vh", width: "100%", background: "#213547", overflowY: "scroll" }}>
+        <div style={{
+          position: "fixed",
+          zIndex: "10",
+          top: "0",
+          left: "0",
+          height: "100vh",
+          width: "100%",
+          background: "#213547",
+          overflowY: "scroll"
+        }}>
+          <button
+            onClick={() => setDisplayOrder(false)}
+            style={{display: "block", marginLeft: "auto", marginTop: "10px", marginRight: "10px", marginBottom: "10px"}}
+          >
+            close
+          </button>
           {localStorage.getItem("items") && (
-            <div style={{ width: "100%" }}>
-              <button
-                onClick={() => setDisplayOrder(false)}
-                style={{display: "block", marginLeft: "auto", marginTop: "10px", marginRight: "10px", marginBottom: "10px"}}
-              >
-                close
-              </button>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center" }}>
+            <div style={{width: "100%"}}>
+              <div style={{display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center"}}>
                 {JSON.parse(localStorage.getItem("items")).map(item => (
                   <div key={item.menuItemId}>
-                    <img style={{ width: '300px' }} src={item.image} alt={item.id} />
+                    <img style={{width: '300px'}} src={item.image} alt={item.id}/>
                     <h3>{item.name}</h3>
                     <p>{item.description}</p>
                     <p>{item.price}</p>
@@ -133,10 +142,10 @@ export default function Menu () {
 
       {menu.map(item => (
         <div key={item.id}>
-          <img style={{ width: '300px' }} src={item.image} alt={item.id}/>
+          <img style={{width: '300px'}} src={item.image} alt={item.id}/>
           <h2>{item.name}</h2>
           <p>{item.price}</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <Dropdown options={options} onChange={(option) => setCurrentQuantity(option.value)} />
             <button
               id={item.id}
